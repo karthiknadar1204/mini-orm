@@ -1,27 +1,27 @@
-'use client'
+"use client";
 
-import { useState } from 'react';
-import Head from 'next/head';
+import { useState } from "react";
+import Head from "next/head";
 
 export default function Home() {
-  const [connectionUrl, setConnectionUrl] = useState('');
+  const [connectionUrl, setConnectionUrl] = useState("");
   const [tables, setTables] = useState([]);
   const [schemas, setSchemas] = useState({});
-  const [selectedTable, setSelectedTable] = useState('');
+  const [selectedTable, setSelectedTable] = useState("");
   const [records, setRecords] = useState([]);
   const [formData, setFormData] = useState({});
-  const [updateData, setUpdateData] = useState({ id: '' });
-  const [deleteId, setDeleteId] = useState('');
-  const [message, setMessage] = useState('');
-  const [queryInput, setQueryInput] = useState('');
+  const [updateData, setUpdateData] = useState({ id: "" });
+  const [deleteId, setDeleteId] = useState("");
+  const [message, setMessage] = useState("");
+  const [queryInput, setQueryInput] = useState("");
   const [queryResult, setQueryResult] = useState(null);
 
   const connect = async () => {
-    setMessage('');
+    setMessage("");
     try {
-      const res = await fetch('/api/connect', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/connect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ connectionUrl }),
       });
       const data = await res.json();
@@ -31,18 +31,18 @@ export default function Home() {
       }
       setTables(data.tables);
       setSchemas(data.schemas);
-      setMessage('Connected successfully! Select a table to proceed.');
+      setMessage("Connected successfully! Select a table to proceed.");
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }
   };
 
   const disconnect = async () => {
-    setMessage('');
+    setMessage("");
     try {
-      const res = await fetch('/api/disconnect', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/disconnect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
       });
       const data = await res.json();
       if (data.error) {
@@ -52,10 +52,10 @@ export default function Home() {
       setTables([]);
       setSchemas({});
       setRecords([]);
-      setSelectedTable('');
+      setSelectedTable("");
       setFormData({});
-      setUpdateData({ id: '' });
-      setMessage('Disconnected successfully.');
+      setUpdateData({ id: "" });
+      setMessage("Disconnected successfully.");
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }
@@ -63,15 +63,15 @@ export default function Home() {
 
   const fetchRecords = async () => {
     if (!selectedTable) {
-      setMessage('Please select a table.');
+      setMessage("Please select a table.");
       return;
     }
-    setMessage('');
+    setMessage("");
     try {
-      const res = await fetch('/api/query', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ table: selectedTable, operation: 'findAll' }),
+      const res = await fetch("/api/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ table: selectedTable, operation: "findAll" }),
       });
       const data = await res.json();
       if (data.error) {
@@ -79,7 +79,7 @@ export default function Home() {
         return;
       }
       setRecords(data.result);
-      setMessage('Records fetched successfully.');
+      setMessage("Records fetched successfully.");
     } catch (error) {
       setMessage(`Error: ${error.message}`);
     }
@@ -88,17 +88,17 @@ export default function Home() {
   const handleCreate = async (e) => {
     e.preventDefault();
     if (!selectedTable) {
-      setMessage('Please select a table.');
+      setMessage("Please select a table.");
       return;
     }
-    setMessage('');
+    setMessage("");
     try {
-      const res = await fetch('/api/query', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           table: selectedTable,
-          operation: 'create',
+          operation: "create",
           data: formData,
         }),
       });
@@ -107,7 +107,7 @@ export default function Home() {
         setMessage(`Error: ${data.error}`);
         return;
       }
-      setMessage('Record created successfully.');
+      setMessage("Record created successfully.");
       setFormData({}); // Reset form
       fetchRecords();
     } catch (error) {
@@ -118,17 +118,17 @@ export default function Home() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     if (!selectedTable) {
-      setMessage('Please select a table.');
+      setMessage("Please select a table.");
       return;
     }
-    setMessage('');
+    setMessage("");
     try {
-      const res = await fetch('/api/query', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           table: selectedTable,
-          operation: 'update',
+          operation: "update",
           id: updateData.id,
           data: formData,
         }),
@@ -138,8 +138,8 @@ export default function Home() {
         setMessage(`Error: ${data.error}`);
         return;
       }
-      setMessage('Record updated successfully.');
-      setUpdateData({ id: '' });
+      setMessage("Record updated successfully.");
+      setUpdateData({ id: "" });
       setFormData({});
       fetchRecords();
     } catch (error) {
@@ -150,17 +150,17 @@ export default function Home() {
   const handleDelete = async (e) => {
     e.preventDefault();
     if (!selectedTable) {
-      setMessage('Please select a table.');
+      setMessage("Please select a table.");
       return;
     }
-    setMessage('');
+    setMessage("");
     try {
-      const res = await fetch('/api/query', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           table: selectedTable,
-          operation: 'delete',
+          operation: "delete",
           id: deleteId,
         }),
       });
@@ -169,8 +169,8 @@ export default function Home() {
         setMessage(`Error: ${data.error}`);
         return;
       }
-      setMessage('Record deleted successfully.');
-      setDeleteId('');
+      setMessage("Record deleted successfully.");
+      setDeleteId("");
       fetchRecords();
     } catch (error) {
       setMessage(`Error: ${error.message}`);
@@ -181,20 +181,24 @@ export default function Home() {
     setSelectedTable(table);
     setRecords([]);
     setFormData({});
-    setUpdateData({ id: '' });
-    setDeleteId('');
-    setMessage('');
+    setUpdateData({ id: "" });
+    setDeleteId("");
+    setMessage("");
   };
 
   const executeQuery = async () => {
     try {
       // Parse the query input
       let operation, data, id, tableName;
-      
+
       // Extract table name and operation
-      const queryMatch = queryInput.match(/^(\w+)\.(findAll|findById|create|update|delete)\(/);
+      const queryMatch = queryInput.match(
+        /^(\w+)\.(findAll|findById|create|update|delete)\(/
+      );
       if (!queryMatch) {
-        setMessage('Invalid query syntax. Please use format: tableName.operation()');
+        setMessage(
+          "Invalid query syntax. Please use format: tableName.operation()"
+        );
         return;
       }
 
@@ -203,58 +207,60 @@ export default function Home() {
 
       // Validate table exists
       if (!tables.includes(tableName)) {
-        setMessage(`Table "${tableName}" does not exist. Available tables: ${tables.join(', ')}`);
+        setMessage(
+          `Table "${tableName}" does not exist. Available tables: ${tables.join(", ")}`
+        );
         return;
       }
-      
-      if (operation === 'findAll') {
+
+      if (operation === "findAll") {
         // No additional parsing needed
-      } else if (operation === 'findById') {
+      } else if (operation === "findById") {
         const idMatch = queryInput.match(/findById\((\d+)\)/);
         if (!idMatch) {
-          setMessage('Invalid ID format in findById operation');
+          setMessage("Invalid ID format in findById operation");
           return;
         }
         id = idMatch[1];
-      } else if (operation === 'create') {
+      } else if (operation === "create") {
         const dataMatch = queryInput.match(/create\((.*)\)/s);
         if (dataMatch) {
           try {
             data = JSON.parse(dataMatch[1]);
           } catch (e) {
-            setMessage('Invalid JSON in create operation');
+            setMessage("Invalid JSON in create operation");
             return;
           }
         }
-      } else if (operation === 'update') {
+      } else if (operation === "update") {
         const updateMatch = queryInput.match(/update\((\d+),\s*(.*)\)/s);
         if (updateMatch) {
           id = updateMatch[1];
           try {
             data = JSON.parse(updateMatch[2]);
           } catch (e) {
-            setMessage('Invalid JSON in update operation');
+            setMessage("Invalid JSON in update operation");
             return;
           }
         }
-      } else if (operation === 'delete') {
+      } else if (operation === "delete") {
         const idMatch = queryInput.match(/delete\((\d+)\)/);
         if (!idMatch) {
-          setMessage('Invalid ID format in delete operation');
+          setMessage("Invalid ID format in delete operation");
           return;
         }
         id = idMatch[1];
       }
 
       // Execute the query
-      const res = await fetch('/api/query', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           table: tableName,
           operation,
           data,
-          id
+          id,
         }),
       });
 
@@ -265,10 +271,10 @@ export default function Home() {
       }
 
       setQueryResult(result.result);
-      setMessage('Query executed successfully');
-      
+      setMessage("Query executed successfully");
+
       // Refresh records if needed
-      if (['create', 'update', 'delete'].includes(operation)) {
+      if (["create", "update", "delete"].includes(operation)) {
         setSelectedTable(tableName); // Update selected table
         fetchRecords();
       }
@@ -286,22 +292,70 @@ export default function Home() {
 
       {/* Documentation Section */}
       <div className="mb-6 p-4 bg-gray-800 rounded text-white">
-        <h2 className="text-xl font-bold mb-2 text-white">ORM Syntax Documentation</h2>
-        <p className="mb-2 text-gray-200">This minimalistic ORM provides simple methods to interact with your PostgreSQL database. Use the following syntax:</p>
+        <h2 className="text-xl font-bold mb-2 text-white">
+          ORM Syntax Documentation
+        </h2>
+        <p className="mb-2 text-gray-200">
+          This minimalistic ORM provides simple methods to interact with your
+          PostgreSQL database. Use the following syntax:
+        </p>
         <ul className="list-disc pl-5 text-gray-200">
-          <li><code className="bg-gray-700 px-1 rounded text-white">model.findAll()</code>: Retrieves all records from the table.</li>
-          <li><code className="bg-gray-700 px-1 rounded text-white">model.findById(id)</code>: Retrieves a record by its ID.</li>
-          <li><code className="bg-gray-700 px-1 rounded text-white">model.create(data)</code>: Creates a new record with the provided data (e.g., <code className="bg-gray-700 px-1 rounded text-white">{'{'}"name": "John", "email": "john@example.com"{'}'}</code>).</li>
-          <li><code className="bg-gray-700 px-1 rounded text-white">model.update(id, data)</code>: Updates a record by ID with new data.</li>
-          <li><code className="bg-gray-700 px-1 rounded text-white">model.delete(id)</code>: Deletes a record by ID.</li>
+          <li>
+            <code className="bg-gray-700 px-1 rounded text-white">
+              model.findAll()
+            </code>
+            : Retrieves all records from the table.
+          </li>
+          <li>
+            <code className="bg-gray-700 px-1 rounded text-white">
+              model.findById(id)
+            </code>
+            : Retrieves a record by its ID.
+          </li>
+          <li>
+            <code className="bg-gray-700 px-1 rounded text-white">
+              model.create(data)
+            </code>
+            : Creates a new record with the provided data (e.g.,{" "}
+            <code className="bg-gray-700 px-1 rounded text-white">
+              {"{"}"name": "John", "email": "john@example.com"{"}"}
+            </code>
+            ).
+          </li>
+          <li>
+            <code className="bg-gray-700 px-1 rounded text-white">
+              model.update(id, data)
+            </code>
+            : Updates a record by ID with new data.
+          </li>
+          <li>
+            <code className="bg-gray-700 px-1 rounded text-white">
+              model.delete(id)
+            </code>
+            : Deletes a record by ID.
+          </li>
         </ul>
-        <p className="mt-2 text-gray-200">Example: For a <code className="bg-gray-700 px-1 rounded text-white">users</code> table, <code className="bg-gray-700 px-1 rounded text-white">model.create({'{'}"name": "John", "email": "john@example.com"{'}'})</code> inserts a new user.</p>
-        <p className="text-gray-200">Assumes tables have an <code className="bg-gray-700 px-1 rounded text-white">id</code> primary key. Use the forms below to test these methods.</p>
+        <p className="mt-2 text-gray-200">
+          Example: For a{" "}
+          <code className="bg-gray-700 px-1 rounded text-white">users</code>{" "}
+          table,{" "}
+          <code className="bg-gray-700 px-1 rounded text-white">
+            model.create({"{"}"name": "John", "email": "john@example.com"{"}"})
+          </code>{" "}
+          inserts a new user.
+        </p>
+        <p className="text-gray-200">
+          Assumes tables have an{" "}
+          <code className="bg-gray-700 px-1 rounded text-white">id</code>{" "}
+          primary key. Use the forms below to test these methods.
+        </p>
       </div>
 
       {/* Connection Section */}
       <div className="mb-6 p-4 bg-gray-800 rounded text-white">
-        <label className="block mb-2 text-white">PostgreSQL Connection URL:</label>
+        <label className="block mb-2 text-white">
+          PostgreSQL Connection URL:
+        </label>
         <input
           type="text"
           value={connectionUrl}
@@ -343,19 +397,29 @@ export default function Home() {
           </select>
           {selectedTable && schemas[selectedTable] && (
             <div className="mb-4">
-              <h3 className="text-lg font-bold text-white">Schema for {selectedTable}</h3>
+              <h3 className="text-lg font-bold text-white">
+                Schema for {selectedTable}
+              </h3>
               <table className="w-full border border-gray-600">
                 <thead>
                   <tr>
-                    <th className="border border-gray-600 p-2 bg-gray-700 text-white">Column</th>
-                    <th className="border border-gray-600 p-2 bg-gray-700 text-white">Data Type</th>
+                    <th className="border border-gray-600 p-2 bg-gray-700 text-white">
+                      Column
+                    </th>
+                    <th className="border border-gray-600 p-2 bg-gray-700 text-white">
+                      Data Type
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {schemas[selectedTable].map((col) => (
                     <tr key={col.column_name}>
-                      <td className="border border-gray-600 p-2 text-gray-200">{col.column_name}</td>
-                      <td className="border border-gray-600 p-2 text-gray-200">{col.data_type}</td>
+                      <td className="border border-gray-600 p-2 text-gray-200">
+                        {col.column_name}
+                      </td>
+                      <td className="border border-gray-600 p-2 text-gray-200">
+                        {col.data_type}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -382,7 +446,10 @@ export default function Home() {
             <thead>
               <tr>
                 {schemas[selectedTable].map((col) => (
-                  <th key={col.column_name} className="border border-gray-600 p-2 bg-gray-700 text-white">
+                  <th
+                    key={col.column_name}
+                    className="border border-gray-600 p-2 bg-gray-700 text-white"
+                  >
                     {col.column_name}
                   </th>
                 ))}
@@ -392,8 +459,11 @@ export default function Home() {
               {records.map((record, index) => (
                 <tr key={index}>
                   {schemas[selectedTable].map((col) => (
-                    <td key={col.column_name} className="border border-gray-600 p-2 text-gray-200">
-                      {record[col.column_name]?.toString() || ''}
+                    <td
+                      key={col.column_name}
+                      className="border border-gray-600 p-2 text-gray-200"
+                    >
+                      {record[col.column_name]?.toString() || ""}
                     </td>
                   ))}
                 </tr>
@@ -410,23 +480,32 @@ export default function Home() {
           <div className="p-4 bg-gray-800 rounded text-white">
             <h2 className="text-xl font-bold mb-2 text-white">Create Record</h2>
             <form onSubmit={handleCreate}>
-              {schemas[selectedTable].map((col) => (
-                col.column_name !== 'id' && (
-                  <div key={col.column_name} className="mb-2">
-                    <label className="block text-gray-200">{col.column_name} ({col.data_type})</label>
-                    <input
-                      type="text"
-                      placeholder={col.column_name}
-                      value={formData[col.column_name] || ''}
-                      onChange={(e) =>
-                        setFormData({ ...formData, [col.column_name]: e.target.value })
-                      }
-                      className="border p-2 w-full bg-gray-700 text-white placeholder-gray-400"
-                    />
-                  </div>
-                )
-              ))}
-              <button type="submit" className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+              {schemas[selectedTable].map(
+                (col) =>
+                  col.column_name !== "id" && (
+                    <div key={col.column_name} className="mb-2">
+                      <label className="block text-gray-200">
+                        {col.column_name} ({col.data_type})
+                      </label>
+                      <input
+                        type="text"
+                        placeholder={col.column_name}
+                        value={formData[col.column_name] || ""}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            [col.column_name]: e.target.value,
+                          })
+                        }
+                        className="border p-2 w-full bg-gray-700 text-white placeholder-gray-400"
+                      />
+                    </div>
+                  )
+              )}
+              <button
+                type="submit"
+                className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+              >
                 Create
               </button>
             </form>
@@ -442,27 +521,38 @@ export default function Home() {
                   type="text"
                   placeholder="ID"
                   value={updateData.id}
-                  onChange={(e) => setUpdateData({ ...updateData, id: e.target.value })}
+                  onChange={(e) =>
+                    setUpdateData({ ...updateData, id: e.target.value })
+                  }
                   className="border p-2 w-full bg-gray-700 text-white placeholder-gray-400"
                 />
               </div>
-              {schemas[selectedTable].map((col) => (
-                col.column_name !== 'id' && (
-                  <div key={col.column_name} className="mb-2">
-                    <label className="block text-gray-200">{col.column_name} ({col.data_type})</label>
-                    <input
-                      type="text"
-                      placeholder={col.column_name}
-                      value={formData[col.column_name] || ''}
-                      onChange={(e) =>
-                        setFormData({ ...formData, [col.column_name]: e.target.value })
-                      }
-                      className="border p-2 w-full bg-gray-700 text-white placeholder-gray-400"
-                    />
-                  </div>
-                )
-              ))}
-              <button type="submit" className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+              {schemas[selectedTable].map(
+                (col) =>
+                  col.column_name !== "id" && (
+                    <div key={col.column_name} className="mb-2">
+                      <label className="block text-gray-200">
+                        {col.column_name} ({col.data_type})
+                      </label>
+                      <input
+                        type="text"
+                        placeholder={col.column_name}
+                        value={formData[col.column_name] || ""}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            [col.column_name]: e.target.value,
+                          })
+                        }
+                        className="border p-2 w-full bg-gray-700 text-white placeholder-gray-400"
+                      />
+                    </div>
+                  )
+              )}
+              <button
+                type="submit"
+                className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+              >
                 Update
               </button>
             </form>
@@ -482,7 +572,10 @@ export default function Home() {
                   className="border p-2 w-full bg-gray-700 text-white placeholder-gray-400"
                 />
               </div>
-              <button type="submit" className="bg-red-500 text-white p-2 rounded hover:bg-red-600">
+              <button
+                type="submit"
+                className="bg-red-500 text-white p-2 rounded hover:bg-red-600"
+              >
                 Delete
               </button>
             </form>
@@ -493,13 +586,15 @@ export default function Home() {
       {/* Query Playground */}
       {selectedTable && (
         <div className="mt-8 p-4 bg-gray-800 rounded text-white">
-          <h2 className="text-xl font-bold mb-4 text-white">Query Playground</h2>
-          
+          <h2 className="text-xl font-bold mb-4 text-white">
+            Query Playground
+          </h2>
+
           {/* Example Syntax */}
           <div className="mb-4 p-4 bg-gray-700 rounded">
             <h3 className="font-bold mb-2 text-white">Example Syntax:</h3>
             <pre className="bg-gray-900 text-gray-100 p-3 rounded overflow-x-auto">
-{`// Find all records from users table
+              {`// Find all records from users table
 users.findAll()
 
 // Find by ID from users table
@@ -538,7 +633,9 @@ orders.create({
 
           {/* Query Input */}
           <div className="mb-4">
-            <label className="block mb-2 font-bold text-white">Write your query:</label>
+            <label className="block mb-2 font-bold text-white">
+              Write your query:
+            </label>
             <textarea
               value={queryInput}
               onChange={(e) => setQueryInput(e.target.value)}
