@@ -71,11 +71,59 @@ class Model {
 async function initORM(connectionUrl) {
   const { initPool } = require('./db');
   global.pool = initPool(connectionUrl);
+  console.log("global.pool from /lib/orm.js", global.pool);
+  // global.pool from /lib/orm.js BoundPool {
+  //   _events: [Object: null prototype] {},
+  //   _eventsCount: 0,
+  //   _maxListeners: undefined,
+  //   options: {
+  //     connectionString: 'postgresql://postgres:guruji1*@localhost:5432/fastapi?sslmode=disable',
+  //     ssl: { rejectUnauthorized: false },
+  //     max: 10,
+  //     min: 0,
+  //     maxUses: Infinity,
+  //     allowExitOnIdle: false,
+  //     maxLifetimeSeconds: 0,
+  //     idleTimeoutMillis: 10000
+  //   },
+  //   log: [Function (anonymous)],
+  //   Client: [class Client extends EventEmitter] {
+  //     Query: [class Query extends EventEmitter]
+  //   },
+  //   Promise: [Function: Promise],
+  //   _clients: [],
+  //   _idle: [],
+  //   _expired: WeakSet { <items unknown> },
+  //   _pendingQueue: [],
+  //   _endCallback: undefined,
+  //   ending: false,
+  //   ended: false,
+  //   [Symbol(kCapture)]: false
+  // }
   const tables = await getTables();
+
+  console.log("tables from /lib/orm.js", tables);
+  // tables from /lib/orm.js [ 'users', 'votes', 'posts', 'alembic_version' ]
   const models = {};
   tables.forEach(table => {
     models[table] = new Model(table);
   });
+
+  // If tables = ["users", "votes"], the forEach loop does:
+// For "users":
+// Creates new Model("users"), which makes a Model object: { tableName: "users", columns: null }.
+// Stores it in models["users"].
+// For "votes":
+// Creates new Model("votes"), which makes { tableName: "votes", columns: null }.
+// Stores it in models["votes"].
+// columns: Starts as null (will store column names if getColumns is called later)
+  console.log("models from /lib/orm.js", models);
+  // models from /lib/orm.js {
+  //   users: Model { tableName: 'users', columns: null },
+  //   votes: Model { tableName: 'votes', columns: null },
+  //   posts: Model { tableName: 'posts', columns: null },
+  //   alembic_version: Model { tableName: 'alembic_version', columns: null }
+  // }
   return models;
 }
 

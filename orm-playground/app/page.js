@@ -191,10 +191,15 @@ export default function Home() {
       // Parse the query input
       let operation, data, id, tableName;
 
-      // Extract table name and operation
+      // ^: Start of the string.
+      // (\w+): Captures one or more word characters (e.g., users) as group 1 (table name).
+      // \.: Matches a literal dot (.).
+      // (findAll|findById|create|update|delete): Captures one of these operations as group 2.
+      // \(: Matches an opening parenthesis.
       const queryMatch = queryInput.match(
         /^(\w+)\.(findAll|findById|create|update|delete)\(/
       );
+
       if (!queryMatch) {
         setMessage(
           "Invalid query syntax. Please use format: tableName.operation()"
@@ -203,7 +208,9 @@ export default function Home() {
       }
 
       tableName = queryMatch[1];
+      console.log("tableName", tableName);
       operation = queryMatch[2];
+      console.log("operation", operation);
 
       // Validate table exists
       if (!tables.includes(tableName)) {
@@ -212,17 +219,20 @@ export default function Home() {
         );
         return;
       }
-
+      console.log("table exists");
       if (operation === "findAll") {
         // No additional parsing needed
       } else if (operation === "findById") {
+        // Regex: Matches findById(number), capturing the number as id.
         const idMatch = queryInput.match(/findById\((\d+)\)/);
         if (!idMatch) {
           setMessage("Invalid ID format in findById operation");
           return;
         }
         id = idMatch[1];
+        console.log("id", id);
       } else if (operation === "create") {
+        // Regex: Captures everything inside create(...) as JSON data.
         const dataMatch = queryInput.match(/create\((.*)\)/s);
         if (dataMatch) {
           try {
@@ -233,9 +243,11 @@ export default function Home() {
           }
         }
       } else if (operation === "update") {
+        // Regex: Matches update(number, JSON), capturing the number as id and JSON as data.
         const updateMatch = queryInput.match(/update\((\d+),\s*(.*)\)/s);
         if (updateMatch) {
           id = updateMatch[1];
+          console.log("id", id);
           try {
             data = JSON.parse(updateMatch[2]);
           } catch (e) {
@@ -244,12 +256,14 @@ export default function Home() {
           }
         }
       } else if (operation === "delete") {
+        // Regex: Matches delete(number), capturing the number as id.
         const idMatch = queryInput.match(/delete\((\d+)\)/);
         if (!idMatch) {
           setMessage("Invalid ID format in delete operation");
           return;
         }
         id = idMatch[1];
+        console.log("id", id);
       }
 
       // Execute the query

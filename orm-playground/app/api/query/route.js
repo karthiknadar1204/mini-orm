@@ -4,6 +4,10 @@ import { NextResponse } from 'next/server';
 export async function POST(request) {
   try {
     const { table, operation, data, id } = await request.json();
+    console.log("table", table);
+    console.log("operation", operation);
+    console.log("data", data);
+    console.log("id", id);
     
     if (!table || !operation) {
       return NextResponse.json(
@@ -20,11 +24,13 @@ export async function POST(request) {
     }
 
     const model = new Model(table);
+    console.log("model", model);
     let result;
 
     switch (operation) {
       case 'findAll':
         result = await model.findAll();
+        console.log("result", result);
         break;
       case 'findById':
         if (!id) {
@@ -34,6 +40,7 @@ export async function POST(request) {
           );
         }
         result = await model.findById(id);
+        console.log("result", result);
         break;
       case 'create':
         if (!data) {
@@ -43,6 +50,7 @@ export async function POST(request) {
           );
         }
         result = await model.create(data);
+        console.log("result", result);
         break;
       case 'update':
         if (!id || !data) {
@@ -52,6 +60,7 @@ export async function POST(request) {
           );
         }
         result = await model.update(id, data);
+        console.log("result", result);
         break;
       case 'delete':
         if (!id) {
@@ -61,6 +70,7 @@ export async function POST(request) {
           );
         }
         result = await model.delete(id);
+        console.log("result", result);
         break;
       default:
         return NextResponse.json(
