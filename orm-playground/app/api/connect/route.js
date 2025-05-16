@@ -14,9 +14,7 @@ export async function POST(request) {
     }
 
     // Add SSL configuration to the connection URL
-    const sslConnectionUrl = connectionUrl.includes('?') 
-      ? `${connectionUrl}&sslmode=disable`
-      : `${connectionUrl}?sslmode=disable`;
+    const sslConnectionUrl = connectionUrl;  // Use the connection URL as is, respecting the sslmode parameter
 
     const models = await initORM(sslConnectionUrl);
     console.log("models from /api/connect endpoint", models);

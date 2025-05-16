@@ -8,7 +8,7 @@ function initPool(connectionUrl) {
   }
   pool = new Pool({
     connectionString: connectionUrl,
-    ssl: { rejectUnauthorized: false }, 
+    ssl: connectionUrl.includes('sslmode=require') ? { rejectUnauthorized: true } : false
   });
   console.log("pool from /lib/db.js", pool);
   // pool from /lib/db.js BoundPool {
